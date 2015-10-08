@@ -8,13 +8,18 @@ import RepoListView from './views/repoListView';
 
 const Router = Backbone.Router.extend({
   routes: {
-    '': 'showAbout',
-    'repos': 'showRepos'
+    '': 'showDefault',
+    ':asdf': 'showAbout',
+    ':asdf/repos': 'showRepos'
   },
 
-  showAbout: function() {
+  showDefault: function(){
+    this.navigate('/victoralvarez84', true);
+  },
+
+  showAbout: function(gitHubName) {
     let profile = new Profile({
-      login: 'victoralvarez84'
+      login: gitHubName
     })
     const aboutView = new AboutView({
       model: profile
@@ -24,10 +29,12 @@ const Router = Backbone.Router.extend({
     // handle nav
     $('nav li').removeClass('active');
     $('nav li.profile').addClass('active');
+    $('nav li.profile a').attr('href', `#${gitHubName}`);
+    $('nav li.repos a').attr('href', `#${gitHubName}/repos`);
   },
 
-  showRepos: function() {
-    let repos = new RepoCollection();
+  showRepos: function(gitHubName) {
+    let repos = new RepoCollection({login: gitHubName});
     let view = new RepoListView({
       collection: repos
     });
