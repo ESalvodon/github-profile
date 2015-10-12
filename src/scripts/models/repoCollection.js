@@ -7,9 +7,8 @@ const RepoCollection = Backbone.Collection.extend({
   },
 
   model: Repo,
-
   initialize: function(options) {
-   this.login = options.login;
+    this.login = options.login;
   }
 });
 export default RepoCollection;
