@@ -8,14 +8,19 @@ import RepoListView from './views/repoListView';
 
 const Router = Backbone.Router.extend({
   routes: {
-    '': 'showAbout',
-    'repos': 'showRepos'
+    '': 'showDefault',
+    ':name': 'showAbout',
+    ':name/repos': 'showRepos'
   },
 
-  showAbout: function() {
+  showDefault : function () {
+    this.navigate('/esalvodon', true);
+  },
+
+  showAbout: function(gitHubName) {
     let profile = new Profile({
-      login: 'victoralvarez84'
-    })
+      login: gitHubName
+    });
     const aboutView = new AboutView({
       model: profile
     });
@@ -24,10 +29,12 @@ const Router = Backbone.Router.extend({
     // handle nav
     $('nav li').removeClass('active');
     $('nav li.profile').addClass('active');
+    $('nav li.profile a').attr('href', `#${gitHubName}`);
+    $('nav li.repos a').attr('href', `#${gitHubName}/repos`);
   },
 
-  showRepos: function() {
-    let repos = new RepoCollection();
+  showRepos: function(gitHubName) {
+    let repos = new RepoCollection({ login: gitHubName });
     let view = new RepoListView({
       collection: repos
     });
@@ -39,7 +46,6 @@ const Router = Backbone.Router.extend({
   },
 
   initialize: function() {
-    console.log('initialize test');
     Backbone.history.start();
   }
 });
